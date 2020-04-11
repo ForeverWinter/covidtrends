@@ -556,27 +556,36 @@ let app = new Vue({
         'China': 'China (Mainland)'
       };
 
+      // The number of new cases in the past ACTIVE_DAYS is considered the number of infectious cases
+      const ACTIVE_DAYS = 21;
       let covidData = [];
       for (let row of grouped){
-
         if (!exclusions.includes(row.region)) {
           const arr = [];
           for (let date of dates) {
             arr.push(row[date]);
           }
-          let slope = arr.map((e,i,a) => e - a[i - 7]);
+          let slope = arr.map((e,i,a) => {
+            if (i < 7 || e < this.minCasesInCountry) return NaN;
+            return e - a[i - 7];
+          });
+          let activeCases = arr.map((e,i,a) => {
+            if (i < ACTIVE_DAYS || e < this.minCasesInCountry) return NaN;
+            return e - a[i - ACTIVE_DAYS];
+          });
           let region = row.region
 
           if (Object.keys(renames).includes(region)) {
             region = renames[region];
           }
+          activeCases = activeCases.slice(ACTIVE_DAYS);
+          slope = slope.slice(ACTIVE_DAYS);
 
-          const cases = arr.map(e => e >= this.minCasesInCountry ? e : NaN);
           covidData.push({
             country: region,
-            cases,
-            slope: slope.map((e,i) => arr[i] >= this.minCasesInCountry ? e : NaN),
-            maxCases: this.myMax(...cases)
+            cases: activeCases,
+            slope,
+            maxCases: this.myMax(...activeCases)
           });
 
         }
