@@ -138,7 +138,7 @@ Vue.component('graph', {
         title: 'Trajectory of COVID-19 '+ this.selectedData + ' (' + this.dates[this.day - 1] + ')',
         showlegend: false,
         xaxis: {
-          title: 'Total ' + this.selectedData,
+          title: 'New ' + this.selectedData + ' (in the Past 3 Weeks)',
           type: this.scale == 'Logarithmic Scale' ? 'log' : 'linear',
           range: this.xrange,
           titlefont: {
