@@ -578,8 +578,6 @@ let app = new Vue({
           if (Object.keys(renames).includes(region)) {
             region = renames[region];
           }
-          activeCases = activeCases.slice(ACTIVE_DAYS);
-          slope = slope.slice(ACTIVE_DAYS);
 
           covidData.push({
             country: region,
