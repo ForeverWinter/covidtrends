@@ -570,7 +570,8 @@ let app = new Vue({
             return e - a[i - 7];
           });
           let activeCases = arr.map((e,i,a) => {
-            if (i < ACTIVE_DAYS || e < this.minCasesInCountry) return NaN;
+            if (e < this.minCasesInCountry) return NaN;
+            if (i < ACTIVE_DAYS) return e;
             return e - a[i - ACTIVE_DAYS];
           });
           let region = row.region
