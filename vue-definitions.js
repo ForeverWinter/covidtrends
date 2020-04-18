@@ -94,7 +94,7 @@ Vue.component('graph', {
           color: 'rgba(0,0,0,0.15)'
         },
         hoverinfo:'x+y+text',
-        hovertemplate: '%{text}<br>Total ' + this.selectedData +': %{x:,}<br>Weekly ' + this.selectedData +': %{y:,}<extra></extra>',
+        hovertemplate: '%{text}<br>' + this.selectedData +' (past 3 weeks): %{x:,}<br>' + this.selectedData +' (past week): %{y:,}<extra></extra>',
       })
       );
 
@@ -110,7 +110,7 @@ Vue.component('graph', {
           size: 6,
           color: 'rgba(254, 52, 110, 1)'
         },
-        hovertemplate: '%{data.text}<br>Total ' + this.selectedData +': %{x:,}<br>Weekly ' + this.selectedData +': %{y:,}<extra></extra>',
+        hovertemplate: '%{data.text}<br>' + this.selectedData +' (past 3 weeks): %{x:,}<br>' + this.selectedData +' (past week): %{y:,}<extra></extra>',
 
       })
       );
