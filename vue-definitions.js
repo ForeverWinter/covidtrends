@@ -388,7 +388,7 @@ let app = new Vue({
           }
           let slope = arr.map((e,i,a) => {
             if (i < 7 || e < this.minCasesInCountry) return NaN;
-            return e - a[i - 7];
+            return (e - a[i - 7])/(e - a[i - ACTIVE_DAYS])*ACTIVE_DAYS/7;
           });
           let activeCases = arr.map((e,i,a) => {
             if (e < this.minCasesInCountry) return NaN;
@@ -617,7 +617,7 @@ let app = new Vue({
         showlegend: false,
         autorange: false,
           xaxis: {
-          title: 'New ' + this.selectedData + ' (in the Past 3 Weeks)',
+          title: 'Active Cases (Estimated)',
           type: this.selectedScale == 'Logarithmic Scale' ? 'log' : 'linear',
           range: this.selectedScale == 'Logarithmic Scale' ? this.logxrange : this.linearxrange,
           titlefont: {
@@ -626,7 +626,7 @@ let app = new Vue({
           },
         },
         yaxis: {
-          title: 'New ' + this.selectedData + ' (in the Past Week)',
+          title: 'R0 (Estimated)',
           type: this.selectedScale == 'Logarithmic Scale' ? 'log' : 'linear',
           range: this.selectedScale == 'Logarithmic Scale' ? this.logyrange : this.linearyrange,
           titlefont: {
@@ -664,7 +664,7 @@ let app = new Vue({
           color: 'rgba(0,0,0,0.15)'
         },
         hoverinfo:'x+y+text',
-        hovertemplate: '%{text}<br>' + this.selectedData +' (past 3 weeks): %{x:,}<br>' + this.selectedData +' (past week): %{y:,}<extra></extra>',
+        hovertemplate: '%{text}<br>' + 'Active Cases (Estimated): %{x:,}<br>' +'R0: %{y:,}<extra></extra>',
       })
       );
 
@@ -681,7 +681,7 @@ let app = new Vue({
           size: 6,
           color: 'rgba(254, 52, 110, 1)'
         },
-        hovertemplate: '%{data.text}<br>' + this.selectedData +' (past 3 weeks): %{x:,}<br>' + this.selectedData +' (past week): %{y:,}<extra></extra>',
+        hovertemplate: '%{data.text}<br>' + 'Active Cases (Estimated): %{x:,}<br>' +'R0: %{y:,}<extra></extra>',
 
       })
       );
@@ -717,19 +717,15 @@ let app = new Vue({
     },
 
     logyrange() {
-      let ymax = Math.max(...this.filteredSlope, 50);
-      let ymin = Math.min(...this.filteredSlope);
+      let ymax = 1;
+      let ymin = -1;
 
-      if (ymin < 10) { // shift ymin on log scale if fewer than 10 cases
-        return [0, Math.ceil(Math.log10(1.5*ymax))]
-      } else {
-        return [1, Math.ceil(Math.log10(1.5*ymax))]
-      }
+      return [ymin, ymax]
     },
 
     linearyrange() {
-      let ymax = Math.max(...this.filteredSlope, 50);
-      let ymin = Math.min(...this.filteredSlope);
+      let ymax = 3;
+      let ymin = 0;
 
       return [-Math.pow(10,Math.floor(Math.log10(ymax))-2), Math.round(1.05 * ymax)];
     },
@@ -740,7 +736,7 @@ let app = new Vue({
 
     paused: true,
 
-    dataTypes: ['Confirmed Cases', 'Reported Deaths'],
+    dataTypes: ['Confirmed Cases'],
 
     selectedData: 'Confirmed Cases',
 
@@ -756,7 +752,7 @@ let app = new Vue({
 
     scale: ['Logarithmic Scale', 'Linear Scale'],
 
-    selectedScale: 'Logarithmic Scale',
+    selectedScale: 'Linear Scale',
 
     minCasesInCountry: 50,
 
@@ -776,7 +772,7 @@ let app = new Vue({
 
     graphMounted: false,
 
-    autoplay: true,
+    autoplay: false,
 
     copied: false,
 
