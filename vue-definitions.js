@@ -378,7 +378,9 @@ let app = new Vue({
       };
 
       // The number of new cases in the past ACTIVE_DAYS is considered the number of infectious cases
-      const ACTIVE_DAYS = 21;
+      const ACTIVE_DAYS = 11;
+      const R_NUM = 7;
+      const R_DEM = 21;
       let covidData = [];
       for (let row of grouped){
         if (!exclusions.includes(row.region)) {
@@ -387,8 +389,8 @@ let app = new Vue({
             arr.push(row[date]);
           }
           let slope = arr.map((e,i,a) => {
-            if (i < 7 || e < this.minCasesInCountry) return NaN;
-            return (e - a[i - 7])/(e - a[i - ACTIVE_DAYS])*ACTIVE_DAYS/7;
+            if (i < R_NUM || e < this.minCasesInCountry) return NaN;
+            return (e - a[i - R_NUM])/(e - a[i - R_DEM])*R_DEM/R_NUM;
           });
           let activeCases = arr.map((e,i,a) => {
             if (e < this.minCasesInCountry) return NaN;
